@@ -40,7 +40,7 @@ class Album
     @name = (name == '') ? self.name : name
     @artist = (artist == '') ? self.artist : artist
     @year = (year == '') ? self.year : year
-    @genre = genre || self.genre
+    @genre = (genre == 'noChange') ? self.genre : genre
   end
 
   def delete
@@ -56,6 +56,6 @@ class Album
   end
 
   def songs
-    Song.find_by_album(self.id) 
+    Song.find_by_album(self.id)
   end
 end
