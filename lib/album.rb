@@ -53,10 +53,12 @@ class Album
   end
 
   def update(name, artist, year, genre)
-    @name = name
-    @artist = artist
-    @year = year
-    @genre = genre
+    if name != ''
+      @name = name
+    end
+    @artist = (artist == '') ? self.artist : artist
+    @year = (year == '') ? self.year : year
+    @genre = (genre == 'noChange') ? self.genre : genre
     DB.exec("UPDATE albums SET name = '#{@name}', artist = '#{@artist}', year = '#{@year}', genre = '#{@genre}' WHERE id = #{@id};")
   end
 
