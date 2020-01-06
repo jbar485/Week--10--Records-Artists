@@ -12,7 +12,7 @@ also_reload('lib/**/*.rb')
 # Root
 get('/') do
   @albums = Album.sorted
-  erb(:albums)
+  redirect to('/albums')
 end
 
 #Album Requests
@@ -27,8 +27,9 @@ post('/albums') do
   artist = params[:album_artist]
   year = params[:album_year]
   genre = params[:album_genre]
+  cost = params[:album_cost]
 
-  album = Album.new({:name => name, :artist => artist, :year => year, :genre => genre, :id => nil})
+  album = Album.new({:name => name, :artist => artist, :year => year, :genre => genre, :cost => cost, :id => nil})
   album.save()
   @albums = Album.sorted
   erb(:albums)
@@ -36,6 +37,11 @@ end
 
 get('/albums/new') do
   erb(:new_album)
+end
+
+get('/albums/destroy') do
+  Album.clear
+  redirect to('/albums')
 end
 
 get('/albums/:id') do
@@ -50,7 +56,7 @@ end
 
 patch('/albums/:id') do
   @album = Album.find(params[:id].to_i())
-  @album.update(params[:album_name], params[:album_artist], params[:album_year], params[:album_genre])
+  @album.update(params[:album_name], params[:album_artist], params[:album_year], params[:album_genre], params[:album_cost])
 
   @albums = Album.sorted
   erb(:albums)

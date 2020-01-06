@@ -4,7 +4,7 @@ describe '#Song' do
   before(:each) do
     Album.clear
     Song.clear
-    @album = Album.new({:name => "Led Zeppelin", :artist => "Led Zeppelin", :year => '1969', :genre => 'Rock', :id => nil})
+    @album = Album.new({:name => "Led Zeppelin", :artist => "Led Zeppelin", :year => '1969', :genre => 'Rock',:cost => 5.50, :id => nil})
     @album.save()
   end
 
@@ -77,7 +77,7 @@ describe '#Song' do
 
   describe('.find_by_album') do
     it("finds songs for an album") do
-      album2 = Album.new({:name => "Led Zeppelin", :artist => "Led Zeppelin", :year => '1969', :genre => 'Rock', :id => nil})
+      album2 = Album.new({:name => "Led Zeppelin", :artist => "Led Zeppelin", :year => '1969', :genre => 'Rock',:cost => 5.50, :id => nil})
       album2.save
       song = Song.new({:name => "Naima", :album_id => @album.id, :id => nil})
       song.save()
@@ -97,7 +97,7 @@ describe '#Song' do
 
   describe('#delete') do
     it("deletes all songs belonging to a deleted album") do
-      album = Album.new({:name => "Led Zeppelin", :artist => "Led Zeppelin", :year => '1969', :genre => 'Rock', :id => nil})
+      album = Album.new({:name => "Led Zeppelin", :artist => "Led Zeppelin", :year => '1969', :genre => 'Rock', :cost => 5.50, :id => nil})
       album.save()
       song = Song.new({:name => "Naima", :album_id => album.id, :id => nil})
       song.save()

@@ -1,6 +1,6 @@
 class Album
 
-  attr_accessor :name, :artist, :year, :genre
+  attr_accessor :name, :artist, :year, :genre, :cost
   attr_reader :id
 
   def initialize(attributes)
@@ -9,6 +9,7 @@ class Album
     @artist = attributes.fetch(:artist)
     @year = attributes.fetch(:year)
     @genre = attributes.fetch(:genre)
+    @cost = attributes.fetch(:cost)
   end
 
   def self.all()
@@ -20,13 +21,14 @@ class Album
       artist = album.fetch("artist")
       year = album.fetch("year")
       genre = album.fetch("genre")
-      albums.push(Album.new({:id => id, :name => name, :artist => artist, :year => year, :genre => genre }))
+      cost = album.fetch("cost")
+      albums.push(Album.new({:id => id, :name => name, :artist => artist, :year => year, :genre => genre, :cost => cost }))
     end
     albums
   end
 
   def save()
-    result = DB.exec("INSERT INTO albums (name, artist, year, genre) VALUES ('#{@name}', '#{@artist}', '#{@year}', '#{@genre}') RETURNING id;")
+    result = DB.exec("INSERT INTO albums (name, artist, year, genre, cost) VALUES ('#{@name}', '#{@artist}', '#{@year}', '#{@genre}', #{@cost}) RETURNING id;")
     @id = result.first().fetch("id").to_i
   end
 
@@ -49,17 +51,19 @@ class Album
     artist = album.fetch("artist")
     year = album.fetch("year")
     genre = album.fetch("genre")
-    Album.new({:id => id, :name => name, :artist => artist, :year => year, :genre => genre })
+    cost = album.fetch("cost")
+    Album.new({:id => id, :name => name, :artist => artist, :year => year, :genre => genre, :cost => cost })
   end
 
-  def update(name, artist, year, genre)
+  def update(name, artist, year, genre, cost)
     if name != ''
       @name = name
     end
     @artist = (artist == '') ? self.artist : artist
     @year = (year == '') ? self.year : year
+    @cost = (cost == '') ? self.cost : cost
     @genre = (genre == 'noChange') ? self.genre : genre
-    DB.exec("UPDATE albums SET name = '#{@name}', artist = '#{@artist}', year = '#{@year}', genre = '#{@genre}' WHERE id = #{@id};")
+    DB.exec("UPDATE albums SET name = '#{@name}', artist = '#{@artist}', year = '#{@year}', genre = '#{@genre}', cost = '#{cost}' WHERE id = #{@id};")
   end
 
   def delete
