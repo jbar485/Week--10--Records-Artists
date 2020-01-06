@@ -1,69 +1,82 @@
-require('album')
-require('rspec')
+require('spec_helper')
 
 
 
 describe('.#Album') do
-
-  before(:each) do
-    @album1 = Album.new("Blue", 'Hervana', 1994, 'Grunge', nil)
-    @album2 = Album.new("Red", 'T.Swiftly', 2003, 'Pop', nil)
-    @album1.save
-    @album2.save
-  end
-
-  after(:each) do
-    Album.clear
-  end
-
-  describe('#==') do
-    it("is the same album if it has the same attributes") do
-      album3 = Album.new("Blue", 'Hervana', 1994, 'Grunge', nil)
-      expect(@album1).to(eq(album3))
+  describe('.all') do
+    it("returns an empty array when there are no albums") do
+      expect(Album.all).to(eq([]))
     end
   end
-
 
   describe('#save') do
-    it ("saves an album") do
-      expect(Album.all).to(eq([@album1, @album2]))
+    it("saves an album") do
+      album = Album.new({:name => "Led Zeppelin", :artist => "Led Zeppelin", :year => '1969', :genre => 'Rock', :id => nil})
+      album.save()
+      album2 = Album.new({:name => 'Moving Pictures', :artist => 'Rush', :year => '1981', :genre => 'Rock', :id => nil })
+      album2.save()
+      expect(Album.all).to(eq([album, album2]))
     end
   end
 
-  describe(".clear") do
+  describe('.clear') do
     it("clears all albums") do
+      album = Album.new({:name => "Led Zeppelin", :artist => "Led Zeppelin", :year => '1969', :genre => 'Rock', :id => nil})
+      album.save()
+      album2 = Album.new({:name => 'Moving Pictures', :artist => 'Rush', :year => '1981', :genre => 'Rock', :id => nil })
+      album2.save()
       Album.clear
       expect(Album.all).to(eq([]))
     end
   end
 
+  describe('#==') do
+    it("is the same album if it has the same attributes as another album") do
+      album = Album.new({:name => "Led Zeppelin", :artist => "Led Zeppelin", :year => '1969', :genre => 'Rock', :id => nil})
+      album2 = Album.new({:name => "Led Zeppelin", :artist => "Led Zeppelin", :year => '1969', :genre => 'Rock', :id => nil})
+      expect(album).to(eq(album2))
+    end
+  end
+
   describe('.find') do
     it("finds an album by id") do
-      expect(Album.find(@album1.id)).to(eq(@album1))
+      album = Album.new({:name => "Led Zeppelin", :artist => "Led Zeppelin", :year => '1969', :genre => 'Rock', :id => nil})
+      album.save()
+      album2 = Album.new({:name => 'Moving Pictures', :artist => 'Rush', :year => '1981', :genre => 'Rock', :id => nil })
+      album2.save()
+      expect(Album.find(album.id)).to(eq(album))
     end
   end
 
   describe('#update') do
     it("updates an album by id") do
-      @album1.update("Yellow", "", "", nil)
-      expect(@album1.name).to(eq('Yellow'))
-      expect(@album1.artist).to(eq('Hervana'))
+      album = Album.new({:name => "Led Zeppelin", :artist => "Led Zeppelin", :year => '1969', :genre => 'Rock', :id => nil})
+      album.save()
+      album.update("A Love Supreme", "Led Zeppelin", '1969', 'Rock')
+      expect(album.name).to(eq("A Love Supreme"))
     end
   end
 
   describe('#delete') do
     it("deletes an album by id") do
-      @album1.delete()
-      expect(Album.all).to(eq([@album2]))
+      album = Album.new({:name => "Led Zeppelin", :artist => "Led Zeppelin", :year => '1969', :genre => 'Rock', :id => nil})
+      album.save()
+      album2 = Album.new({:name => 'Moving Pictures', :artist => 'Rush', :year => '1981', :genre => 'Rock', :id => nil })
+      album2.save()
+      album.delete()
+      expect(Album.all).to(eq([album2]))
     end
   end
 
-  describe('.search') do
-    it("returns an array of albums by name") do
-      album3 = Album.new("Red Letter Day", 'Death Staves', 2001, 'Rock', nil)
-      album3.save
-      expect(Album.search('Red')).to(eq([@album2, album3]))
+  describe('#songs') do
+    it("returns an album's songs") do
+      album = Album.new({:name => "Led Zeppelin", :artist => "Led Zeppelin", :year => '1969', :genre => 'Rock', :id => nil})
+      album.save()
+      song = Song.new({:name => "Naima", :album_id => album.id, :id => nil})
+      song.save()
+      song2 = Song.new({:name => "Cousin Mary", :album_id => album.id, :id => nil})
+      song2.save()
+      expect(album.songs).to(eq([song, song2]))
     end
   end
-
 end

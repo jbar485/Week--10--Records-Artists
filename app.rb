@@ -3,6 +3,10 @@ require('sinatra/reloader')
 require('pry')
 require('./lib/album')
 require('./lib/song')
+require('pg')
+
+DB = PG.connect({:dbname => "record_store"})
+
 also_reload('lib/**/*.rb')
 
 # Root
@@ -24,7 +28,7 @@ post('/albums') do
   year = params[:album_year]
   genre = params[:album_genre]
 
-  album = Album.new(name, artist, year, genre, nil)
+  album = Album.new({:name => name, :artist => artist, :year => year, :genre => genre, :id => nil})
   album.save()
   @albums = Album.sorted
   erb(:albums)
@@ -69,12 +73,17 @@ end
 
 get('/albums/:id/songs/:song_id') do #Song Details
   @song = Song.find(params[:song_id].to_i())
-  erb(:song)
+  @album = Album.find(params[:id].to_i())
+  if @song != nil
+    erb(:song)
+  else
+    erb(:error_page)
+  end
 end
 
 post('/albums/:id/songs') do #add a new song
   @album = Album.find(params[:id].to_i())
-  song = Song.new(params[:song_name], @album.id, nil)
+  song = Song.new({:name => params[:song_name],:album_id => @album.id, :id => nil})
   song.save()
   erb(:album)
 end

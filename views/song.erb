@@ -8,7 +8,7 @@
   <input type="text" name="name">
   <button type="submit">Update song</button>
 </form>
-<form action="/albums/<%@song.album.id %>/songs/<%=@song.id %>" method="post">
+<form action="/albums/<%= @song.album.id %>/songs/<%=@song.id %>" method="post">
   <input name="_method" type="hidden" value="delete">
 
   <button type="submit">Delete song</button>
