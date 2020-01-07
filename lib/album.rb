@@ -21,7 +21,7 @@ class Album
       artist = album.fetch("artist")
       year = album.fetch("year")
       genre = album.fetch("genre")
-      cost = album.fetch("cost")
+      cost = album.fetch("cost").to_i
       albums.push(Album.new({:id => id, :name => name, :artist => artist, :year => year, :genre => genre, :cost => cost }))
     end
     albums
@@ -51,7 +51,7 @@ class Album
     artist = album.fetch("artist")
     year = album.fetch("year")
     genre = album.fetch("genre")
-    cost = album.fetch("cost")
+    cost = album.fetch("cost").to_i
     Album.new({:id => id, :name => name, :artist => artist, :year => year, :genre => genre, :cost => cost })
   end
 
@@ -61,9 +61,9 @@ class Album
     end
     @artist = (artist == '') ? self.artist : artist
     @year = (year == '') ? self.year : year
-    @cost = (cost == '') ? self.cost : cost
+    @cost = (cost == '') ? self.cost.to_i : cost.to_i
     @genre = (genre == 'noChange') ? self.genre : genre
-    DB.exec("UPDATE albums SET name = '#{@name}', artist = '#{@artist}', year = '#{@year}', genre = '#{@genre}', cost = '#{cost}' WHERE id = #{@id};")
+    DB.exec("UPDATE albums SET name = '#{@name}', artist = '#{@artist}', year = '#{@year}', genre = '#{@genre}', cost = #{cost} WHERE id = #{@id};")
   end
 
   def delete

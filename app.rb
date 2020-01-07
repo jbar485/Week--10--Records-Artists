@@ -3,6 +3,7 @@ require('sinatra/reloader')
 require('pry')
 require('./lib/album')
 require('./lib/song')
+require('./lib/artist')
 require('pg')
 
 DB = PG.connect({:dbname => "record_store"})
@@ -18,24 +19,27 @@ end
 #Album Requests
 
 get('/albums') do
+  @artists = Artist.sorted
   @albums = Album.sorted
   erb(:albums)
 end
 
 post('/albums') do
+  artist = Artist.find(params[:album_artist])
   name = params[:album_name]
-  artist = params[:album_artist]
   year = params[:album_year]
   genre = params[:album_genre]
   cost = params[:album_cost]
-
-  album = Album.new({:name => name, :artist => artist, :year => year, :genre => genre, :cost => cost, :id => nil})
+  album = Album.new({:name => name, :artist => artist.name, :year => year, :genre => genre, :cost => cost, :id => nil})
   album.save()
+  artist.update({:album_name => name})
   @albums = Album.sorted
+
   erb(:albums)
 end
 
 get('/albums/new') do
+  @artists = Artist.all
   erb(:new_album)
 end
 
@@ -126,4 +130,45 @@ delete('/albums/:id/songs/:song_id') do #delete a song from albums
   song.delete
   @album = Album.find(params[:id].to_i())
   erb(:album)
+end
+
+# artist views
+
+get('/artists') do
+  @artists = Artist.sorted
+  erb(:artists)
+end
+get('/artists/new') do
+  erb(:new_artist)
+end
+
+post('/artists') do
+  name = params[:artist_name]
+  artist = Artist.new({:name => name, :id => nil})
+  artist.save()
+  @artists = Artist.sorted
+  erb(:artists)
+end
+
+get('/artists/:id') do
+
+  @artist= Artist.find(params[:id].to_i())
+  results = DB.exec("SELECT album_id FROM albums_artists WHERE artist_id = #{params[:id]};")
+  album_id = result.fetch("album_id").to_i()
+  @album = DB.exec("SELECT * FROM albums WHERE id = #{album_id};")
+  erb(:album)
+end
+
+patch('/artists/:id') do
+  @artist = Artist.find(params[:id].to_i())
+  @artist.update(params[:artist_name])
+  @artists = Artist.sorted
+  erb(:artists)
+end
+
+delete('/artists/:id') do
+  @artist = Artist.find(params[:id].to_i())
+  @artist.delete()
+  @artists = Artist.sorted
+  erb(:artists)
 end

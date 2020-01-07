@@ -1,4 +1,5 @@
 <h1>Primary Records</h1>
+
 <h3>Available Records:</h3>
 
 <% if @albums.any? %>
@@ -43,4 +44,8 @@
 <form action="/albums/destroy" method="get">
   <input class="form-control" type="hidden">
   <button id="destroy" type="submit" class="btn">Destroy All Records</button>
+</form>
+<form action="/artists" method="get">
+  <input class="form-control" type="hidden">
+  <button type="submit" class="btn">ARTISTS!</button>
 </form>
