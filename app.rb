@@ -75,6 +75,26 @@ get('/search') do
   erb(:search)
 end
 
+get('/sort_cost') do
+  @albums = Album.sort_cost
+  erb(:albums)
+end
+
+get('/sort_cost_descending') do
+  @albums = Album.sort_cost_descending
+  erb(:albums)
+end
+
+get('/sort_year') do
+  @albums = Album.sort_year
+  erb(:albums)
+end
+
+get('/sort_year_descending') do
+  @albums = Album.sort_year_descending
+  erb(:albums)
+end
+
 # Song Requests
 
 get('/albums/:id/songs/:song_id') do #Song Details

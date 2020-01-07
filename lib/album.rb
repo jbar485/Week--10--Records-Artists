@@ -75,6 +75,22 @@ class Album
     Album.all.sort_by { |album| album.name }
   end
 
+  def self.sort_cost
+    Album.all.sort_by{ |album| album.cost}
+  end
+
+  def self.sort_cost_descending
+    Album.all.sort_by{ |album| album.cost}.reverse
+  end
+
+  def self.sort_year
+    Album.all.sort_by{ |album| album.year}
+  end
+
+  def self.sort_year_descending
+    Album.all.sort_by{ |album| album.year}.reverse
+  end
+
   def self.search(query)
     Album.sorted.select { |album| album.name.match?(/(#{query})/i)}
   end
