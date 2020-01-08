@@ -151,12 +151,9 @@ post('/artists') do
 end
 
 get('/artists/:id') do
-
   @artist= Artist.find(params[:id].to_i())
-  results = DB.exec("SELECT album_id FROM albums_artists WHERE artist_id = #{params[:id]};")
-  album_id = result.fetch("album_id").to_i()
-  @album = DB.exec("SELECT * FROM albums WHERE id = #{album_id};")
-  erb(:album)
+  @albums = @artist.albums
+  erb(:artist)
 end
 
 patch('/artists/:id') do

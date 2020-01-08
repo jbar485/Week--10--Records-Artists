@@ -11,10 +11,6 @@
 <% else %>
 <p>There are no albums for this artist yet.</p>
 <% end %>
-<form action="/albums/<%= @album.id() %>" method="post">
-  <input name="_method" type="hidden" value="get">
-  <button type="submit">Add album</button>
-</form>
 
 
 <p><a href="/artist/<%= @artist.id %>/edit">Edit artist</a></p>

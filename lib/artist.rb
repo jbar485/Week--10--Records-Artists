@@ -75,16 +75,17 @@ class Artist
     albums = []
     results = DB.exec("SELECT album_id FROM albums_artists WHERE artist_id = #{@id};")
     results.each() do |result|
-      album_id = result.fetch("album_id").to_i()
-      album = DB.exec("SELECT * FROM albums WHERE id = #{album_id};")
-      name = album.first().fetch("name")
-      artist = album.first().fetch("artist")
-      year = album.first().fetch("year")
-      genre = album.first().fetch("genre")
-      cost = album.first().fetch("cost")
-      albums.push(Album.new({:name => name, :id => album_id, :artist => artist, :year => year, :genre => genre, :cost => cost}))
+      if result.include? 'album_id'
+        album_id = result.fetch("album_id").to_i()
+        album = Album.find(album_id)
+        name = album.first().fetch("name")
+        artist = album.first().fetch("artist")
+        year = album.first().fetch("year")
+        genre = album.first().fetch("genre")
+        cost = album.first().fetch("cost")
+        albums.push(Album.new({:name => name, :id => album_id, :artist => artist, :year => year, :genre => genre, :cost => cost}))
+      end
     end
     albums
   end
-
 end
